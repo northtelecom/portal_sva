@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Link } from 'react-router-dom';
 import { FiArrowRight, FiTrash } from 'react-icons/fi';
 import MenuHeader from '../../components/MenuHeader';
 import {
