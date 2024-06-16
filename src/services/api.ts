@@ -8,8 +8,8 @@ const api = axios.create({
     }
 
     if (status === 401 && window.location.pathname !== '/') {
-      localStorage.removeItem('@AdminBizz:token');
-      localStorage.removeItem('@AdminBizz:user');
+      localStorage.removeItem('@PortalSVABizz:token');
+      localStorage.removeItem('@PortalSVABizz:user');
 
       window.location.href = '';
     }
