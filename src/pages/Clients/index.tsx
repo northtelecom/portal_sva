@@ -236,7 +236,7 @@ const Clients: React.FC = () => {
                         return (
                           <tr key={subscription.id}>
                             <td className="column2">
-                              {subscription.productKey}
+                              {subscription.productName}
                             </td>
                             <td className="column1">
                               <FiTrash
