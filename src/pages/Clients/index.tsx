@@ -15,13 +15,7 @@ import api from '../../services/api';
 import { Client } from '../../types/Client';
 import InputSample from '../../components/InputSample';
 import { useToast } from '../../hooks/toast';
-
-const productKeys = {
-  Q01: 'Deezer',
-  P01: 'HBO Max',
-  UBA: 'Ubook Go',
-  DT1: 'Sky+',
-};
+import { productKeys } from '../../constants/productKeys';
 
 const Clients: React.FC = () => {
   const { addToast } = useToast();
@@ -77,9 +71,18 @@ const Clients: React.FC = () => {
 
   const productsAssociates = useMemo(() => {
     if (client) {
-      return (
-        client.subscriptions?.filter(subscription => subscription.active) || []
+      const clientSubscriptionsActive =
+        client.subscriptions?.filter(subscription => subscription.active) || [];
+      const clientSubscriptions = clientSubscriptionsActive?.map(
+        subscription => {
+          return {
+            ...subscription,
+            productName: productKeys[subscription.productKey],
+          };
+        },
       );
+
+      return clientSubscriptions;
     }
 
     return [];
