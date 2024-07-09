@@ -57,15 +57,17 @@ const Clients: React.FC = () => {
 
           return true;
         })
-        .map(product => ({
-          productKey: product[0],
-          productName: product[1],
+        .map(([productKey, product]) => ({
+          productKey,
+          productName: product.name,
+          productSva: product.sva,
         }));
     }
 
-    return Object.entries(productKeys).map(product => ({
-      productKey: product[0],
-      productName: product[1],
+    return Object.entries(productKeys).map(([productKey, product]) => ({
+      productKey,
+      productName: product.name,
+      productSva: product.sva,
     }));
   }, [client]);
 
@@ -75,9 +77,12 @@ const Clients: React.FC = () => {
         client.subscriptions?.filter(subscription => subscription.active) || [];
       const clientSubscriptions = clientSubscriptionsActive?.map(
         subscription => {
+          const productKey = productKeys[subscription.productKey];
+
           return {
             ...subscription,
-            productName: productKeys[subscription.productKey],
+            productName: productKey.name,
+            sva: productKey.sva,
           };
         },
       );
@@ -109,11 +114,11 @@ const Clients: React.FC = () => {
   }, [documentFilter]);
 
   const createSubscription = useCallback(
-    async productKey => {
+    async product => {
       try {
-        await api.post(`/playhub/subscription`, {
+        await api.post(`/${product.productSva}/subscription`, {
           clientId: client?.id,
-          productKey,
+          productKey: product.productKey,
         });
         reload();
       } catch (err: any) {
@@ -128,9 +133,11 @@ const Clients: React.FC = () => {
   );
 
   const removeSubscription = useCallback(
-    async subscriptionId => {
+    async subscription => {
       try {
-        await api.delete(`/playhub/subscription/${subscriptionId}`);
+        await api.delete(
+          `/${subscription.sva}/subscription/${subscription.id}`,
+        );
         reload();
       } catch (err: any) {
         addToast({
@@ -211,9 +218,7 @@ const Clients: React.FC = () => {
                             <td className="column1">
                               <FiArrowRight
                                 onClick={() => {
-                                  createSubscription(
-                                    productsAvailable.productKey,
-                                  );
+                                  createSubscription(productsAvailable);
                                 }}
                               />
                             </td>
@@ -241,7 +246,7 @@ const Clients: React.FC = () => {
                             <td className="column1">
                               <FiTrash
                                 onClick={() => {
-                                  removeSubscription(subscription.id);
+                                  removeSubscription(subscription);
                                 }}
                               />
                             </td>
