@@ -3,5 +3,8 @@ export const productKeys = {
   P01: { name: 'HBO Max', sva: 'playhub' },
   UBA: { name: 'Ubook Go', sva: 'playhub' },
   DT1: { name: 'Sky+', sva: 'playhub' },
-  watchBR: { name: 'Watch BR', sva: 'watchbr' },
+  watchBR: { name: 'Paramount+', sva: 'watchbr' },
+  hero: { name: 'Hero Basico', sva: 'hero' },
+  pro: { name: 'Qualifica Pro', sva: 'qualifica' },
+  premium: { name: 'Qualifica Premium', sva: 'qualifica' },
 };
