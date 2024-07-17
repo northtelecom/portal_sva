@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FiArrowRight, FiTrash } from 'react-icons/fi';
@@ -16,8 +17,10 @@ import { Client } from '../../types/Client';
 import InputSample from '../../components/InputSample';
 import { useToast } from '../../hooks/toast';
 import { productKeys } from '../../constants/productKeys';
+import { useAuth } from '../../hooks/auth';
 
 const Clients: React.FC = () => {
+  const { user } = useAuth();
   const { addToast } = useToast();
   const [isFetching, setIsFetching] = useState(false);
   const [documentFilter, setDocumentFilter] = useState('');
@@ -81,8 +84,8 @@ const Clients: React.FC = () => {
 
           return {
             ...subscription,
-            productName: productKey.name,
-            sva: productKey.sva,
+            productName: productKey?.name,
+            sva: productKey?.sva,
           };
         },
       );
@@ -116,9 +119,17 @@ const Clients: React.FC = () => {
   const createSubscription = useCallback(
     async product => {
       try {
+        let verifyPermissionInHub = true;
+        if (user.role === 'admin') {
+          verifyPermissionInHub = window.confirm(
+            'Você é um admin! Deseja que essa assinatura valide se esse cliente tem permissão ao SVA no hubsoft?',
+          );
+        }
+
         await api.post(`/${product.productSva}/subscription`, {
           clientId: client?.id,
           productKey: product.productKey,
+          verifyPermissionInHub,
         });
         reload();
       } catch (err: any) {
@@ -129,7 +140,7 @@ const Clients: React.FC = () => {
         });
       }
     },
-    [addToast, client, reload],
+    [addToast, client, reload, user.role],
   );
 
   const removeSubscription = useCallback(

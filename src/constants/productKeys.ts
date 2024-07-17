@@ -7,4 +7,5 @@ export const productKeys = {
   hero: { name: 'Hero Basico', sva: 'hero' },
   pro: { name: 'Qualifica Pro', sva: 'qualifica' },
   premium: { name: 'Qualifica Premium', sva: 'qualifica' },
+  // bitTrainer: { name: 'Bit Trainer', sva: 'bitTrainer' },
 };
