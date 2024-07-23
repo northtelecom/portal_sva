@@ -21,6 +21,7 @@
     "jquery": "^3.6.1",
     "jquery-mask-plugin": "^1.14.16",
     "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
     "polished": "^4.0.5",
     "react": "^17.0.1",
     "react-calendar": "^4.2.1",

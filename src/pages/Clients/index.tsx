@@ -235,7 +235,7 @@ const Clients: React.FC = () => {
       subscription: () => {
         return (
           <p key={log.id}>
-            {date} - {userName} - {successText} - {product.name} -{' '}
+            ASSINATURA - {date} - {userName} - {successText} - {product.name} -{' '}
             {verifyPermissionInHubText}
           </p>
         );
@@ -243,8 +243,8 @@ const Clients: React.FC = () => {
       unsubscription: () => {
         return (
           <p key={log.id}>
-            {date} - {userName} - {successText} - {product.name} -{' '}
-            {verifyPermissionInHubText} - Motivo do erro: {reasonText}
+            CANCELAMENTO - {date} - {userName} - {successText} - {product.name}{' '}
+            - {verifyPermissionInHubText} - Motivo do erro: {reasonText}
           </p>
         );
       },
