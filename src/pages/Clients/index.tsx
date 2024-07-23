@@ -14,10 +14,16 @@ import {
 } from './styles';
 import api from '../../services/api';
 import { Client } from '../../types/Client';
+import { Log } from '../../types/Log';
 import InputSample from '../../components/InputSample';
 import { useToast } from '../../hooks/toast';
 import { productKeys } from '../../constants/productKeys';
 import { useAuth } from '../../hooks/auth';
+import { User } from '../../types';
+
+type UserType = {
+  [key: string]: User;
+};
 
 const Clients: React.FC = () => {
   const { user } = useAuth();
@@ -25,26 +31,38 @@ const Clients: React.FC = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [documentFilter, setDocumentFilter] = useState('');
   const [client, setClient] = useState<Client | null>(null);
+  const [logs, setLogs] = useState<Log[]>([]);
+  const [isFetchingLogs, setIsFetchingLogs] = useState(false);
+  const [users, setUsers] = useState<UserType>({});
 
   useEffect(() => {
-    if (documentFilter === '') {
-      return;
-    }
+    api.get(`/users`).then(res => {
+      const usersResponse: User[] = res.data || [];
 
-    if (documentFilter.length === 11 || documentFilter.length === 14) {
-      setIsFetching(true);
+      const allUsers: UserType = {};
+      usersResponse.forEach(usr => {
+        allUsers[usr.id] = usr;
+      });
+      setUsers(allUsers);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (client) {
+      setIsFetchingLogs(true);
       api
-        .get(`/clients/${documentFilter}`)
+        .get(`/logs/${client.id}`)
         .then(res => {
-          setClient(res.data);
+          setLogs(res.data);
         })
         .finally(() => {
-          setIsFetching(false);
+          setIsFetchingLogs(false);
         });
     } else {
-      setClient(null);
+      setIsFetchingLogs(false);
+      setLogs([]);
     }
-  }, [documentFilter]);
+  }, [client]);
 
   const productsAvailables = useMemo(() => {
     if (client) {
@@ -102,6 +120,7 @@ const Clients: React.FC = () => {
     }
 
     if (documentFilter.length === 11 || documentFilter.length === 14) {
+      setClient(null);
       setIsFetching(true);
       api
         .get(`/clients/${documentFilter}`)
@@ -119,6 +138,7 @@ const Clients: React.FC = () => {
   const createSubscription = useCallback(
     async product => {
       try {
+        setIsFetching(true);
         let verifyPermissionInHub = true;
         if (user.role === 'admin') {
           verifyPermissionInHub = window.confirm(
@@ -133,6 +153,7 @@ const Clients: React.FC = () => {
         });
         reload();
       } catch (err: any) {
+        setIsFetching(false);
         addToast({
           type: 'error',
           title: 'Erro na assinatura',
@@ -143,6 +164,24 @@ const Clients: React.FC = () => {
     [addToast, client, reload, user.role],
   );
 
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  function formatDateToBrazilian(dateString: Date): string {
+    const date = new Date(dateString);
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
+
   const removeSubscription = useCallback(
     async subscription => {
       try {
@@ -151,6 +190,7 @@ const Clients: React.FC = () => {
         );
         reload();
       } catch (err: any) {
+        setIsFetching(false);
         addToast({
           type: 'error',
           title: 'Erro ao remover assinatura',
@@ -160,6 +200,52 @@ const Clients: React.FC = () => {
     },
     [addToast, reload],
   );
+
+  function renderLog(log: Log): any {
+    const {
+      action,
+      success,
+      productKey,
+      verifyPermissionInHub,
+      reason,
+    } = log.detail;
+    const product = productKeys[productKey];
+    const date = formatDateToBrazilian(log.createdAt);
+    const successText = success ? 'SUCESSO' : 'ERRO';
+    let verifyPermissionInHubText = verifyPermissionInHub ? 'Sim' : 'Não';
+    verifyPermissionInHubText = `Verificou Permissão no Hub:${verifyPermissionInHubText}`;
+    const reasonText =
+      typeof reason === 'string' ? reason : JSON.stringify(reason);
+    const userName = users[log.userId]?.name;
+
+    const typesLogs = {
+      subscription: () => {
+        return (
+          <p key={log.id}>
+            {date} - {userName} - {successText} - {product.name} -{' '}
+            {verifyPermissionInHubText}
+          </p>
+        );
+      },
+      unsubscription: () => {
+        return (
+          <p key={log.id}>
+            {date} - {userName} - {successText} - {product.name} -{' '}
+            {verifyPermissionInHubText} - Motivo do erro: {reasonText}
+          </p>
+        );
+      },
+      create_client: () => {
+        return (
+          <p key={log.id}>
+            {date} - {userName} - Cliente cadastrado
+          </p>
+        );
+      },
+    };
+
+    return typesLogs[action] ? typesLogs[action]() : '';
+  }
 
   return (
     <Container>
@@ -268,6 +354,26 @@ const Clients: React.FC = () => {
                   </table>
                 </Subscription>
               </SubscriptionContainer>
+
+              <div>
+                <h1>Logs</h1>
+                <hr />
+                {logs.length > 0 && (
+                  <>
+                    {logs?.map(log => {
+                      return renderLog(log);
+                    })}
+                  </>
+                )}
+
+                {isFetchingLogs && (
+                  <p className="fetching">Carregando logs...</p>
+                )}
+
+                {!isFetchingLogs && logs.length === 0 && (
+                  <p className="fetching">Nenhum log</p>
+                )}
+              </div>
             </>
           )}
 

@@ -5,6 +5,6 @@ export interface Client {
   name: string;
   document: string;
   subscriptions?: Subscription[];
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
