@@ -244,7 +244,7 @@ const Clients: React.FC = () => {
         return (
           <p key={log.id}>
             CANCELAMENTO - {date} - {userName} - {successText} - {product.name}{' '}
-            - {verifyPermissionInHubText} - Motivo do erro: {reasonText}
+            - Motivo do erro: {reasonText}
           </p>
         );
       },
