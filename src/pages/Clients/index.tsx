@@ -47,6 +47,18 @@ const Clients: React.FC = () => {
     });
   }, []);
 
+  function loadLogs(clientId: string): void {
+    setIsFetchingLogs(true);
+    api
+      .get(`/logs/${clientId}`)
+      .then(res => {
+        setLogs(res.data);
+      })
+      .finally(() => {
+        setIsFetchingLogs(false);
+      });
+  }
+
   useEffect(() => {
     if (client) {
       setIsFetchingLogs(true);
@@ -154,6 +166,7 @@ const Clients: React.FC = () => {
         reload();
       } catch (err: any) {
         setIsFetching(false);
+        client?.id && loadLogs(client.id);
         addToast({
           type: 'error',
           title: 'Erro na assinatura',
