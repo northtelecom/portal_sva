@@ -236,7 +236,7 @@ const Clients: React.FC = () => {
         return (
           <p key={log.id}>
             ASSINATURA - {date} - {userName} - {successText} - {product.name} -{' '}
-            {verifyPermissionInHubText}
+            {verifyPermissionInHubText} - Motivo do erro: {reasonText}
           </p>
         );
       },
