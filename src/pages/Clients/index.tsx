@@ -341,7 +341,7 @@ const Clients: React.FC = () => {
                   />
                 </h3>
                 <h3>Documento: {client.document}</h3>
-                <p>Email primario: {client.clientHubSoft?.email_primario}</p>
+                <p>Email primario: {client.clientHubSoft?.email_principal}</p>
                 <p>
                   Telefone primario: {client.clientHubSoft?.telefone_primario}
                 </p>

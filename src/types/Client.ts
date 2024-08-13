@@ -6,7 +6,7 @@ export interface Client {
   document: string;
   subscriptions?: Subscription[];
   clientHubSoft: {
-    email_primario: string;
+    email_principal: string;
     telefone_primario: string;
     telefone_secundario: string;
     servicos: {
