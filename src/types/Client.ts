@@ -5,6 +5,15 @@ export interface Client {
   name: string;
   document: string;
   subscriptions?: Subscription[];
+  clientHubSoft: {
+    email_primario: string;
+    telefone_primario: string;
+    telefone_secundario: string;
+    servicos: {
+      nome: string;
+      status: string;
+    }[];
+  };
   createdAt: Date;
   updatedAt: Date;
 }

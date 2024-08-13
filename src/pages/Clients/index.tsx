@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { FiArrowRight, FiTrash } from 'react-icons/fi';
+import { FiArrowRight, FiTrash, FiRotateCcw } from 'react-icons/fi';
 import MenuHeader from '../../components/MenuHeader';
 import {
   Container,
@@ -177,6 +177,26 @@ const Clients: React.FC = () => {
     [addToast, client, reload, user.role],
   );
 
+  const syncronizeClient = useCallback(async () => {
+    try {
+      setIsFetching(true);
+      if (user.role !== 'admin') {
+        return;
+      }
+
+      await api.post(`clients/${client?.id}/syncronize`);
+      reload();
+    } catch (err: any) {
+      setIsFetching(false);
+      client?.id && loadLogs(client.id);
+      addToast({
+        type: 'error',
+        title: 'Erro na assinatura',
+        description: err.response?.data?.message,
+      });
+    }
+  }, [addToast, client, reload, user.role]);
+
   useEffect(() => {
     reload();
   }, [reload]);
@@ -255,6 +275,13 @@ const Clients: React.FC = () => {
           </p>
         );
       },
+      syncronized_client: () => {
+        return (
+          <p key={log.id}>
+            SINCRONIZADO - {date} - {userName}
+          </p>
+        );
+      },
     };
 
     return typesLogs[action] ? typesLogs[action]() : '';
@@ -298,8 +325,35 @@ const Clients: React.FC = () => {
           {client && (
             <>
               <ClientInfo>
-                <h3>Nome: {client.name}</h3>
+                <h3
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignSelf: 'flex-start',
+                    gap: 12,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Nome: {client.name}
+                  <FiRotateCcw
+                    style={{ width: 24, height: 24, color: '#ff9000' }}
+                    onClick={syncronizeClient}
+                  />
+                </h3>
                 <h3>Documento: {client.document}</h3>
+                <p>Email primario: {client.clientHubSoft?.email_primario}</p>
+                <p>
+                  Telefone primario: {client.clientHubSoft?.telefone_primario}
+                </p>
+                <p>
+                  Telefone secundario:{' '}
+                  {client.clientHubSoft?.telefone_secundario}
+                </p>
+                {client.clientHubSoft?.servicos.map(servico => (
+                  <p>
+                    {servico.nome} - {servico.status}
+                  </p>
+                ))}
               </ClientInfo>
 
               <HeaderPage>
