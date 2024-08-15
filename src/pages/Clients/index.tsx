@@ -184,7 +184,11 @@ const Clients: React.FC = () => {
         return;
       }
 
-      await api.post(`clients/${client?.id}/syncronize`);
+      await api.post(`clients/${client?.id}/syncronize`, null, {
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      });
       reload();
     } catch (err: any) {
       setIsFetching(false);
