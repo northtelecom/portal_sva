@@ -8,5 +8,5 @@ export const productKeys = {
   pro: { name: 'Qualifica Pro', sva: 'qualifica' },
   premium: { name: 'Qualifica Premium', sva: 'qualifica' },
   mediquo: { name: 'Mediquo', sva: 'mediquo' },
-  // bitTrainer: { name: 'Bit Trainer', sva: 'bitTrainer' },
+  bitTrainer: { name: 'Bit Trainer', sva: 'bitTrainer' },
 };

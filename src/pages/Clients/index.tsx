@@ -259,30 +259,45 @@ const Clients: React.FC = () => {
       subscription: () => {
         return (
           <p key={log.id}>
-            ASSINATURA - {date} - {userName} - {successText} - {product.name} -{' '}
-            {verifyPermissionInHubText} - Motivo do erro: {reasonText}
+            {date} - ASSINATURA - {userName} - {product.name} - {successText} -{' '}
+            {verifyPermissionInHubText}{' '}
+            {reasonText ? ` - Motivo do erro:${reasonText}` : ''}
           </p>
         );
       },
       unsubscription: () => {
         return (
           <p key={log.id}>
-            CANCELAMENTO - {date} - {userName} - {successText} - {product.name}{' '}
-            - Motivo do erro: {reasonText}
+            {date} - CANCELAMENTO - {userName} - {product.name} - {successText}{' '}
+            - {reasonText ? ` - Motivo do erro:${reasonText}` : ''}
           </p>
         );
       },
       create_client: () => {
         return (
           <p key={log.id}>
-            {date} - {userName} - Cliente cadastrado
+            {date} - CADASTRO CLIENTE - {userName}
           </p>
         );
       },
       syncronized_client: () => {
         return (
           <p key={log.id}>
-            SINCRONIZADO - {date} - {userName}
+            {date} - SINCRONIZADO - {userName}
+          </p>
+        );
+      },
+      inative_subscription: () => {
+        return (
+          <p key={log.id}>
+            {date} - INATIVADO -{userName} - {product.name}
+          </p>
+        );
+      },
+      reactive_subscription: () => {
+        return (
+          <p key={log.id}>
+            {date} - REATIVADO - {userName} - {product.name}
           </p>
         );
       },
