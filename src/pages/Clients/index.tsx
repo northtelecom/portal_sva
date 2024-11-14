@@ -180,9 +180,6 @@ const Clients: React.FC = () => {
   const syncronizeClient = useCallback(async () => {
     try {
       setIsFetching(true);
-      if (user.role !== 'admin') {
-        return;
-      }
 
       await api.post(`clients/${client?.id}/syncronize`, null, {
         headers: {
