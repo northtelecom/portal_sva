@@ -196,7 +196,7 @@ const Clients: React.FC = () => {
         description: err.response?.data?.message,
       });
     }
-  }, [addToast, client, reload, user.role]);
+  }, [addToast, client, reload]);
 
   useEffect(() => {
     reload();
