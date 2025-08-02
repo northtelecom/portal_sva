@@ -92,15 +92,15 @@ const Clients: React.FC = () => {
         })
         .map(([productKey, product]) => ({
           productKey,
-          productName: product.name,
-          productSva: product.sva,
+          productName: product?.name,
+          productSva: product?.sva,
         }));
     }
 
     return Object.entries(productKeys).map(([productKey, product]) => ({
       productKey,
-      productName: product.name,
-      productSva: product.sva,
+      productName: product?.name,
+      productSva: product?.sva,
     }));
   }, [client]);
 
@@ -158,9 +158,9 @@ const Clients: React.FC = () => {
           );
         }
 
-        await api.post(`/${product.productSva}/subscription`, {
+        await api.post(`/${product?.productSva}/subscription`, {
           clientId: client?.id,
-          productKey: product.productKey,
+          productKey: product?.productKey,
           verifyPermissionInHub,
         });
         reload();
@@ -256,7 +256,7 @@ const Clients: React.FC = () => {
       subscription: () => {
         return (
           <p key={log.id}>
-            {date} - ASSINATURA - {userName} - {product.name} - {successText} -{' '}
+            {date} - ASSINATURA - {userName} - {product?.name} - {successText} -{' '}
             {verifyPermissionInHubText}{' '}
             {reasonText ? ` - Motivo do erro:${reasonText}` : ''}
           </p>
@@ -265,7 +265,7 @@ const Clients: React.FC = () => {
       unsubscription: () => {
         return (
           <p key={log.id}>
-            {date} - CANCELAMENTO - {userName} - {product.name} - {successText}{' '}
+            {date} - CANCELAMENTO - {userName} - {product?.name} - {successText}{' '}
             - {reasonText ? ` - Motivo do erro:${reasonText}` : ''}
           </p>
         );
@@ -287,14 +287,14 @@ const Clients: React.FC = () => {
       inative_subscription: () => {
         return (
           <p key={log.id}>
-            {date} - INATIVADO -{userName} - {product.name}
+            {date} - INATIVADO -{userName} - {product?.name}
           </p>
         );
       },
       reactive_subscription: () => {
         return (
           <p key={log.id}>
-            {date} - REATIVADO - {userName} - {product.name}
+            {date} - REATIVADO - {userName} - {product?.name}
           </p>
         );
       },
