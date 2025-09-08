@@ -1,8 +1,9 @@
 export const productKeys = {
   Q01: { name: 'Deezer', sva: 'playhub' },
-  P01: { name: 'HBO Max', sva: 'playhub' },
+  HBO: { name: 'HBO Max', sva: 'playhub' },
   UBA: { name: 'Ubook Go', sva: 'playhub' },
   DTQ: { name: 'Sky+', sva: 'playhub' },
+  DISNEY: { name: 'Disney+', sva: 'playhub' },
   watchBR: { name: 'Paramount+', sva: 'watchbr' },
   hero: { name: 'Hero Basico', sva: 'hero' },
   pro: { name: 'Qualifica Pro', sva: 'qualifica' },
